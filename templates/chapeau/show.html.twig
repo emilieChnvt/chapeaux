@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ChapeauController!{% endblock %}
+
+{% block body %}
+
+        <div class="border border-2 w-25 p-2">
+
+            <h3 class="mt-2">{{ chapeau.name }}</h3>
+            <p>je suis les chapeau show</p>
+            <h5>{{ chapeau.price }}</h5>
+            <a href="{{ path('chapeaux') }}">retour</a>
+        </div>
+
+{% endblock %}
