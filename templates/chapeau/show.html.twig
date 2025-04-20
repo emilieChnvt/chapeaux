@@ -12,6 +12,12 @@
            <div class="d-flex flex-column">
                <a href="{{ path('chapeaux') }}">retour</a>
                <a href="{{ path('edit_chapeau', {id :chapeau.id}) }}">edit</a>
+               <form method="post"
+                     action="{{ path('delete_chapeau', {id: chapeau.id}) }}"
+                     onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce chapeau ?');">
+                   <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chapeau.id) }}">
+                   <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+               </form>
            </div>
         </div>
 
