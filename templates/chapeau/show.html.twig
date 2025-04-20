@@ -9,7 +9,10 @@
             <h3 class="mt-2">{{ chapeau.name }}</h3>
             <p>je suis les chapeau show</p>
             <h5>{{ chapeau.price }}</h5>
-            <a href="{{ path('chapeaux') }}">retour</a>
+           <div class="d-flex flex-column">
+               <a href="{{ path('chapeaux') }}">retour</a>
+               <a href="{{ path('edit_chapeau', {id :chapeau.id}) }}">edit</a>
+           </div>
         </div>
 
 {% endblock %}

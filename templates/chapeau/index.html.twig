@@ -7,7 +7,10 @@
     <div class="border border-2 w-25 p-2">
         <h3 class="mt-2">{{ chapeau.name }}</h3>
         <h5>{{ chapeau.price }}</h5>
-        <a href="{{ path('show_chapeau', {id : chapeau.id}) }}">voir plus</a>
+        <div class="d-flex flex-column">
+            <a href="{{ path('show_chapeau', {id : chapeau.id}) }}">voir plus</a>
+            <a href="{{ path('edit_chapeau', {id : chapeau.id}) }}">edit</a>
+        </div>
     </div>
 {% endfor %}
 {% endblock %}

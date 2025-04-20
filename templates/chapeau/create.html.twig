@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme chapeauForm  'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+<h3>Add another chapeau</h3>
+    {{ form_start(chapeauForm) }}
+    {{ form_label(chapeauForm.name) }}
+    {{ form_widget(chapeauForm.name) }}
+    {{ form_label(chapeauForm.price) }}
+    {{ form_widget(chapeauForm.price) }}
+    <button type="submit">add</button>
+    {{ form_end(chapeauForm) }}
+{% endblock %}
