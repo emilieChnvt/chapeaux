@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme matiereForm  'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+{{ form_start(matiereForm) }}
+{{ form_label(matiereForm.name) }}
+{{ form_widget(matiereForm.name) }}
+    <button type="submit">create</button>
+
+{{ form_end(matiereForm) }}
+{% endblock %}
