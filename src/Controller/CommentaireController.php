@@ -13,13 +13,21 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CommentaireController extends AbstractController
 {
-    #[Route('/commentaire/create', name: 'create_commentaire')]
-    public function create(EntityManagerInterface $entityManager, Request $request, Chapeau $chapeau): Response
+    #[Route('/commentaire/edit/{id}', name: 'edit_commentaire')]
+    public function edit(Commentaire $commentaire, Request $request, EntityManagerInterface $manager): Response
     {
-
-        return $this->render('commentaire/create.html.twig', [
+        if(!$commentaire){
+            return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
+        }
+        $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
+        $commentaireForm->handleRequest($request);
+        if($commentaireForm->isSubmitted() && $commentaireForm->isValid()){
+            $manager->persist($commentaire);
+            $manager->flush();
+            return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
+        }
+        return $this->render('commentaire/edit.html.twig', [
             'commentaireForm' => $commentaireForm->createView(),
         ]);
-
     }
 }

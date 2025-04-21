@@ -31,6 +31,7 @@
                     {{ form_widget(commentaireForm.content) }}
                     <button type="submit" class="btn btn-success">add</button>
                     {{ form_end(commentaireForm) }}
+
                 </div>
             </div>
        </div>
@@ -45,6 +46,8 @@
                     <div class="border border-2 w-100 p-2">
                         <p class="text-decoration-underline fs-4">{{ commentaire.content }}</p>
                         <p>{{ commentaire.auteur }}</p>
+                        <a href="{{ path('edit_commentaire', {id : commentaire.id}) }}">edit</a>
+
                     </div>
                 {% endfor %}
             </div>

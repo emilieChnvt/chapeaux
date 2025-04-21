@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% form_theme commentaireForm 'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+    <div class="d-flex flex-column justify-content-center align-items-center border border-2">
+        <h3>edit your commentaire</h3>
+        <div class="d-flex flex-column">
+
+            {{ form_start(commentaireForm) }}
+
+            {{ form_label(commentaireForm.content) }}
+            {{ form_widget(commentaireForm.content) }}
+            <button type="submit" class="btn btn-success">add</button>
+            {{ form_end(commentaireForm) }}
+        </div>
+    </div>
+
+{% endblock %}
