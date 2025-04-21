@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Chapeau;
 use App\Entity\Commentaire;
-use App\Entity\User;
+use App\Entity\Image;
 use App\Form\ChapeauType;
 use App\Form\CommentaireType;
+use App\Form\ImageType;
 use App\Repository\ChapeauRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,9 +54,10 @@ final class ChapeauController extends AbstractController
     #[Route('/chapeau/create', name: 'create_chapeau')]
     public function create( EntityManagerInterface $manager, Request $request): Response
     {
-        if($this->getUser()->getRoles() !== ['ROLE_ADMIN']){
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $this->redirectToRoute('chapeaux');
         }
+
         $chapeau = new Chapeau();
         $chapeauForm = $this->createForm(ChapeauType::class, $chapeau);
         $chapeauForm->handleRequest($request);
@@ -102,5 +104,22 @@ final class ChapeauController extends AbstractController
         $manager->remove($chapeau);
         $manager->flush();
         return $this->redirectToRoute('chapeaux');
+    }
+
+    #[Route('/chapeau/addImage/{id}', name: 'image_chapeau')]
+    public function addImage(EntityManagerInterface $manager, Request $request, Chapeau $chapeau):Response
+    {
+        $image = new Image();
+        $formImage = $this->createForm(ImageType::class, $image);
+        $formImage->handleRequest($request);
+        if($formImage->isSubmitted() && $formImage->isValid()){
+            $image->setChapeau($chapeau);
+            $manager->persist($image);
+            $manager->flush();
+            return $this->redirectToRoute('chapeaux');
+        }
+        return $this->render('chapeau/addImage.html.twig', [
+            'imageForm' => $formImage->createView(),
+        ]);
     }
 }

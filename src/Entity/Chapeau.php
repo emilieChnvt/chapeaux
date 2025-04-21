@@ -34,8 +34,12 @@ class Chapeau
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'chapeau', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'chapeau')]
     private Collection $images;
+
+    /**
+     * @var Collection<int, Image>
+     */
 
     public function __construct()
     {
@@ -117,6 +121,23 @@ class Chapeau
     /**
      * @return Collection<int, Image>
      */
+
+
+    public function removeImage(Image $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getChapeau() === $this) {
+                $image->setChapeau(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
     public function getImages(): Collection
     {
         return $this->images;
@@ -127,18 +148,6 @@ class Chapeau
         if (!$this->images->contains($image)) {
             $this->images->add($image);
             $image->setChapeau($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Image $image): static
-    {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getChapeau() === $this) {
-                $image->setChapeau(null);
-            }
         }
 
         return $this;

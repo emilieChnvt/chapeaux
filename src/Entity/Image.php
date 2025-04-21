@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Entity;
-
-use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use App\Repository\ImageRepository;
+
+
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[Vich\Uploadable]
@@ -15,20 +17,23 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
+
     // ... other fields
 
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
-    #[Vich\UploadableField(mapping: 'products', fileNameProperty: 'image.name', size: 'image.size')]
+    #[Vich\UploadableField(mapping: 'lesImages', fileNameProperty: 'imageName', size: 'imageSize')]
     private ?File $imageFile = null;
 
-    #[ORM\Embedded(class: 'Vich\UploaderBundle\Entity\File')]
-    private ?EmbeddedFile $image = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $imageSize = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Chapeau $chapeau = null;
 
     /**
@@ -56,18 +61,24 @@ class Image
         return $this->imageFile;
     }
 
-    public function setImage(EmbeddedFile $image): void
+    public function setImageName(?string $imageName): void
     {
-        $this->image = $image;
+        $this->imageName = $imageName;
     }
 
-    public function getImage(): ?EmbeddedFile
+    public function getImageName(): ?string
     {
-        return $this->image;
+        return $this->imageName;
     }
-    public function getId(): ?int
+
+    public function setImageSize(?int $imageSize): void
     {
-        return $this->id;
+        $this->imageSize = $imageSize;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
     }
 
     public function getChapeau(): ?Chapeau
