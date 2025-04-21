@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Chapeau;
+use App\Entity\User;
 use App\Form\ChapeauType;
 use App\Repository\ChapeauRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,6 +17,9 @@ final class ChapeauController extends AbstractController
     #[Route('/', name: 'chapeaux')]
     public function index(ChapeauRepository $repository): Response
     {
+        if(!$user = $this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('chapeau/index.html.twig', [
             'chapeaux'=>$repository->findAll(),
         ]);
