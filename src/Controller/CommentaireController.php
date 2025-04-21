@@ -30,4 +30,16 @@ final class CommentaireController extends AbstractController
             'commentaireForm' => $commentaireForm->createView(),
         ]);
     }
+
+    #[Route('/commentaire/delete/{id}', name: 'delete_commentaire')]
+    public function delete(Commentaire $commentaire, Request $request, EntityManagerInterface $manager): Response
+    {
+        if($commentaire){
+            $manager->remove($commentaire);
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
+
+    }
 }

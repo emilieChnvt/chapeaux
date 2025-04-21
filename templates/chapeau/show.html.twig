@@ -47,6 +47,7 @@
                         <p class="text-decoration-underline fs-4">{{ commentaire.content }}</p>
                         <p>{{ commentaire.auteur }}</p>
                         <a href="{{ path('edit_commentaire', {id : commentaire.id}) }}">edit</a>
+                        <a href="{{ path('delete_commentaire', {id : commentaire.id}) }}">delete</a>
 
                     </div>
                 {% endfor %}
