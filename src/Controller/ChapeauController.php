@@ -39,6 +39,9 @@ final class ChapeauController extends AbstractController
     #[Route('/chapeau/create', name: 'create_chapeau')]
     public function create( EntityManagerInterface $manager, Request $request): Response
     {
+        if($this->getUser()->getRoles() !== ['ROLE_ADMIN']){
+            return $this->redirectToRoute('chapeaux');
+        }
         $chapeau = new Chapeau();
         $chapeauForm = $this->createForm(ChapeauType::class, $chapeau);
         $chapeauForm->handleRequest($request);
@@ -55,6 +58,9 @@ final class ChapeauController extends AbstractController
     #[Route('/chapeau/edit/{id}', name: 'edit_chapeau')]
     public function edit(Chapeau $chapeau, Request $request, EntityManagerInterface $manager): Response
     {
+        if($this->getUser()->getRoles() !== ['ROLE_ADMIN']){
+            return $this->redirectToRoute('chapeaux');
+        }
         if(!$chapeau){
             return $this->redirectToRoute('chapeaux');
         }
@@ -73,6 +79,9 @@ final class ChapeauController extends AbstractController
     #[Route('/chapeau/delete/{id}', name: 'delete_chapeau')]
     public function delete(Chapeau $chapeau, EntityManagerInterface $manager): Response
     {
+        if(!$this->isGranted('ROLE_ADMIN')){
+            return $this->redirectToRoute('chapeaux');
+        }
         if(!$chapeau){
             return $this->redirectToRoute('chapeaux');
         }
