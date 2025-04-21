@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Chapeau;
+use App\Entity\Commentaire;
 use App\Entity\User;
 use App\Form\ChapeauType;
+use App\Form\CommentaireType;
 use App\Repository\ChapeauRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,13 +28,25 @@ final class ChapeauController extends AbstractController
     }
 
     #[Route('/chapeau/show/{id}', name: 'show_chapeau', priority: -1)]
-    public function show(Chapeau $chapeau): Response
+    public function show(Chapeau $chapeau, EntityManagerInterface $entityManager, Request $request): Response
     {
         if(!$chapeau){
             return $this->redirectToRoute('chapeaux');
         }
+        $commentaire = new Commentaire();
+        $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
+        $commentaireForm->handleRequest($request);
+        if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+            $commentaire->setAuteur($this->getUser());
+            $commentaire->setChapeau($chapeau);
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
+        }
         return $this->render('chapeau/show.html.twig', [
             'chapeau' => $chapeau,
+            'commentaireForm' => $commentaireForm->createView(),
         ]);
     }
 

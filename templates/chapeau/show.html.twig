@@ -1,24 +1,53 @@
 {% extends 'base.html.twig' %}
-
+{% form_theme commentaireForm 'bootstrap_5_layout.html.twig' %}
 {% block title %}Hello ChapeauController!{% endblock %}
 
 {% block body %}
 
-        <div class="border border-2 w-25 p-2">
+       <div class="d-flex flex-column justify-content-between">
+           <div class="border border-2 w-50 p-2">
 
-            <h3 class="mt-2">{{ chapeau.name }}</h3>
-            <p>je suis les chapeau show</p>
-            <h5>{{ chapeau.price }}</h5>
-           <div class="d-flex flex-column">
-               <a href="{{ path('chapeaux') }}">retour</a>
-               <a href="{{ path('edit_chapeau', {id :chapeau.id}) }}">edit</a>
-               <form method="post"
-                     action="{{ path('delete_chapeau', {id: chapeau.id}) }}"
-                     onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce chapeau ?');">
-                   <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chapeau.id) }}">
-                   <button class="btn btn-outline-danger btn-sm">Supprimer</button>
-               </form>
+               <h3 class="mt-2">{{ chapeau.name }}</h3>
+               <p>je suis les chapeau show</p>
+               <h5>{{ chapeau.price }}</h5>
+               <div class="d-flex flex-column">
+                   <a href="{{ path('chapeaux') }}">retour</a>
+                   <a href="{{ path('edit_chapeau', {id :chapeau.id}) }}">edit</a>
+                   <form method="post"
+                         action="{{ path('delete_chapeau', {id: chapeau.id}) }}"
+                         onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce chapeau ?');">
+                       <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chapeau.id) }}">
+                       <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                   </form>
+               </div>
            </div>
-        </div>
+            <div class="d-flex flex-column justify-content-center align-items-center border border-2">
+                <h3>Add a new commentaire</h3>
+                <div class="d-flex flex-column">
+
+                    {{ form_start(commentaireForm) }}
+
+                    {{ form_label(commentaireForm.content) }}
+                    {{ form_widget(commentaireForm.content) }}
+                    <button type="submit" class="btn btn-success">add</button>
+                    {{ form_end(commentaireForm) }}
+                </div>
+            </div>
+       </div>
+
+            <hr/>
+            <hr/>
+            <hr/>
+
+            <div class="mt-5">
+                <h5>Commentaire</h5>
+                {% for commentaire in chapeau.commentaires %}
+                    <div class="border border-2 w-100 p-2">
+                        <p class="text-decoration-underline fs-4">{{ commentaire.content }}</p>
+                        <p>{{ commentaire.auteur }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+
 
 {% endblock %}
