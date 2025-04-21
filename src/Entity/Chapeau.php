@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChapeauRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapeauRepository::class)]
@@ -22,6 +24,17 @@ class Chapeau
     #[ORM\ManyToOne(inversedBy: 'chapeaux')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Matiere $matiere = null;
+
+    /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'chapeau', orphanRemoval: true)]
+    private Collection $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,36 @@ class Chapeau
     public function setMatiere(?Matiere $matiere): static
     {
         $this->matiere = $matiere;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setChapeau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getChapeau() === $this) {
+                $commentaire->setChapeau(null);
+            }
+        }
 
         return $this;
     }
