@@ -16,7 +16,7 @@ final class CommentaireController extends AbstractController
     #[Route('/commentaire/edit/{id}', name: 'edit_commentaire')]
     public function edit(Commentaire $commentaire, Request $request, EntityManagerInterface $manager): Response
     {
-        if(!$commentaire){
+        if(!$commentaire || $commentaire->getAuteur() !== $this->getUser()){
             return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
         }
         $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
@@ -34,10 +34,12 @@ final class CommentaireController extends AbstractController
     #[Route('/commentaire/delete/{id}', name: 'delete_commentaire')]
     public function delete(Commentaire $commentaire, Request $request, EntityManagerInterface $manager): Response
     {
-        if($commentaire){
-            $manager->remove($commentaire);
-            $manager->flush();
+
+        if($commentaire->getAuteur() !== $this->getUser() || !$commentaire){
+            return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
         }
+        $manager->remove($commentaire);
+        $manager->flush();
 
         return $this->redirectToRoute('show_chapeau', ['id' => $commentaire->getChapeau()->getId()]);
 
